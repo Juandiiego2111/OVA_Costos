@@ -1,4 +1,4 @@
-package libcostos;
+package aplicacion;
 
 import libcostos.JavaCostos;
 
@@ -15,7 +15,7 @@ public class Costos {
         this.costos = new JavaCostos();
 
         float materiales = 1000f;
-        float manoObra = 700f;
+        float manoObra = 500f;
         float indirectos = 300f;
 
         float costoTotal = costos.calcularCostoTotal(materiales, manoObra, indirectos);
