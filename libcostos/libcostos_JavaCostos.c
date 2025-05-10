@@ -3,8 +3,8 @@
 #include "libcostos_JavaCostos.h"
 
 JNIEXPORT jfloat JNICALL Java_libcostos_JavaCostos_calcularCostoTotal
-  (JNIEnv *env, jobject obj, jfloat materiales, jfloat manoObra, jfloat indirectos) {
-    return materiales + manoObra + indirectos;
+(JNIEnv *env, jobject obj, jfloat cfijo, jfloat cvariable, jfloat cindirecto) { 
+    return cfijo + cvariable + cindirecto;
 }
 
 JNIEXPORT jfloat JNICALL Java_libcostos_JavaCostos_calcularCostoUnitario
