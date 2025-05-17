@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (FFF)F
  */
 JNIEXPORT jfloat JNICALL Java_libcostos_JavaCostos_calcularCostoTotal
-  (JNIEnv *, jobject, jfloat, jfloat, jfloat);
+  (JNIEnv *, jclass, jfloat, jfloat, jfloat);
 
 /*
  * Class:     libcostos_JavaCostos
@@ -21,7 +21,7 @@ JNIEXPORT jfloat JNICALL Java_libcostos_JavaCostos_calcularCostoTotal
  * Signature: (FI)F
  */
 JNIEXPORT jfloat JNICALL Java_libcostos_JavaCostos_calcularCostoUnitario
-  (JNIEnv *, jobject, jfloat, jint);
+  (JNIEnv *, jclass, jfloat, jint);
 
 /*
  * Class:     libcostos_JavaCostos
@@ -29,7 +29,7 @@ JNIEXPORT jfloat JNICALL Java_libcostos_JavaCostos_calcularCostoUnitario
  * Signature: (FF)F
  */
 JNIEXPORT jfloat JNICALL Java_libcostos_JavaCostos_calcularMargenGanancia
-  (JNIEnv *, jobject, jfloat, jfloat);
+  (JNIEnv *, jclass, jfloat, jfloat);
 
 /*
  * Class:     libcostos_JavaCostos
@@ -37,7 +37,15 @@ JNIEXPORT jfloat JNICALL Java_libcostos_JavaCostos_calcularMargenGanancia
  * Signature: (FF)F
  */
 JNIEXPORT jfloat JNICALL Java_libcostos_JavaCostos_calcularPrecioVenta
-  (JNIEnv *, jobject, jfloat, jfloat);
+  (JNIEnv *, jclass, jfloat, jfloat);
+
+/*
+ * Class:     libcostos_JavaCostos
+ * Method:    generarJSONCostos
+ * Signature: (FFFIF)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_libcostos_JavaCostos_generarJSONCostos
+  (JNIEnv *, jclass, jfloat, jfloat, jfloat, jint, jfloat);
 
 #ifdef __cplusplus
 }

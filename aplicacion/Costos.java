@@ -1,92 +1,126 @@
-// Declaramos que esta clase pertenece al paquete 'aplicacion'
 package aplicacion;
 
-// Importamos la clase nativa JavaCostos desde el paquete libcostos
 import libcostos.JavaCostos;
-
-// Importamos Scanner para leer entrada del usuario por consola
 import java.util.Scanner;
 
 public class Costos {
+    private float cfijo;
+    private float cvariable;
+    private float cindirecto;
+    private int unidades;
+    private float porcentajeGanancia;
 
-// Atributo para acceder a los métodos nativos de la biblioteca en C
-    private JavaCostos costos;
+    private static class MenuCostos {
+        private final Scanner scanner = new Scanner(System.in);
+        private final Costos costos = new Costos();
 
-// Constructor: inicializa el objeto costos con una instancia de JavaCostos
-    public Costos() {
-        this.costos = new JavaCostos();
-    }
+        public void iniciar() {
+            int opcion;
+            do {
+                mostrarMenu();
+                opcion = leerOpcion();
+                procesarOpcion(opcion);
+            } while(opcion != 0);
+            scanner.close();
+        }
 
-// Método principal que ejecuta el programa
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in); // Objeto para leer entrada del usuario
-        Costos app = new Costos(); // Creamos una instancia de esta clase
-        double resultado; // Variable para almacenar los resultados de los cálculos
-
-// Bucle infinito para mostrar el menú hasta que el usuario decida salir
-        while (true){ 
-// Menú con opciones para el usuario
-            System.out.println("\n--- Menú de Cálculo de Costos ---");
+        private void mostrarMenu() {
+            System.out.println("=== SISTEMA DE COSTOS ===");
             System.out.println("1. Calcular Costo Total");
             System.out.println("2. Calcular Costo Unitario");
             System.out.println("3. Calcular Margen de Ganancia");
             System.out.println("4. Calcular Precio de Venta");
+            System.out.println("5. Generar JSON de Costos");
             System.out.println("0. Salir");
-            System.out.print("Seleccione una opción: ");
+            System.out.print("Opción: ");
+        }
 
-            int opcion = sc.nextInt(); // Leemos la opción del usuario
-
-            if (opcion == 0) break; // Si elige 0, salimos del bucle
-
-            switch (opcion) {
-                case 1:
-                    // Costo Total = Costo Fijo + Costo Variable
-                    System.out.print("Ingrese costo fijo: ");
-                    double cf = sc.nextDouble();
-                    System.out.print("Ingrese costo variable: ");
-                    double cv = sc.nextDouble();
-                    System.out.print("Ingrese costo indirecto: ");
-                    double ci = sc.nextDouble();
-                    resultado = app.costos.calcularCostoTotal((float)cf, (float)cv, (float)ci);
-                    System.out.println("Costo Total: " + resultado);
-                    break;
-                case 2:
-                    // Costo Unitario = Costo Total / Número de Unidades
-                    System.out.print("Ingrese el costo total: ");
-                    double ct = sc.nextDouble();
-                    System.out.print("Ingrese el número de unidades: ");
-                    int u = sc.nextInt();
-                    resultado = app.costos.calcularCostoUnitario((float)ct, u);
-                    System.out.println("Costo Unitario: " + resultado);
-                    break;
-                case 3:
-                    // Margen de Ganancia = Precio Venta - Costo
-                    System.out.print("Ingrese el costo: ");
-                    double c = sc.nextDouble();
-                    System.out.print("Ingrese el precio de venta: ");
-                    double pv = sc.nextDouble();
-                    resultado = app.costos.calcularMargenGanancia((float)c, (float)pv);
-                    System.out.println("Margen de Ganancia: " + resultado);
-                    break;
-                case 4:
-                    // Precio Venta = Costo + Margen de Ganancia
-                    System.out.print("Ingrese el costo: ");
-                    double c2 = sc.nextDouble();
-                    System.out.print("Ingrese el margen de ganancia: ");
-                    double mg = sc.nextDouble();
-                    resultado = app.costos.calcularPrecioVenta((float)c2, (float)mg);
-                    System.out.println("Precio de Venta: " + resultado);
-                    break;
-                default:
-                    // Si el usuario digita una opción no válida
-                    System.out.println("Opción inválida. Intente nuevamente.");
-                    break;
+        private int leerOpcion() {
+            try {
+                return scanner.nextInt();
+            } finally {
+                scanner.nextLine();
             }
         }
 
-// Cerramos el scanner y despedimos al usuario
-        sc.close();
-        System.out.println("¡Gracias por usar la calculadora!");
-    }
-}
+        private void procesarOpcion(int opcion) {
+            switch(opcion) {
+                case 1: calcularCostoTotal(); 
+                break;
+                case 2: calcularCostoUnitario(); 
+                break;
+                case 3: calcularMargenGanancia(); 
+                break;
+                case 4: mostrarPrecioVenta(); 
+                break;
+                case 5: generarJSONCostos(); 
+                break;
+                case 0: System.out.println("Saliendo.."); 
+                break;
+                default: System.out.println("Opción inválida!");
+            }
+        }
 
+        private void calcularCostoTotal() {
+            System.out.print("\nCosto Fijo: ");
+            float cfijo = scanner.nextFloat();
+            System.out.print("Costo Variable: ");
+            float cvariable = scanner.nextFloat();
+            System.out.print("Costo Indirecto: ");
+            float cindirecto = scanner.nextFloat();
+            
+            costos.cfijo = cfijo;
+            costos.cvariable = cvariable;
+            costos.cindirecto = cindirecto;
+
+            float total = JavaCostos.calcularCostoTotal(cfijo, cvariable, cindirecto);
+            System.out.println("Costo Total: " + total);
+        }
+
+        private void calcularCostoUnitario() {
+            System.out.print("\nUnidades Producidas: ");
+            costos.unidades = scanner.nextInt();
+            float unitario = JavaCostos.calcularCostoUnitario(
+                JavaCostos.calcularCostoTotal(costos.cfijo, costos.cvariable, costos.cindirecto),
+                costos.unidades
+            );
+            System.out.println("Costo Unitario: " + unitario);
+        }
+
+        private void calcularMargenGanancia() {
+            System.out.print("\nPorcentaje de Ganancia (%): ");
+            costos.porcentajeGanancia = scanner.nextFloat();
+            float margen = JavaCostos.calcularMargenGanancia(
+                JavaCostos.calcularCostoTotal(costos.cfijo, costos.cvariable, costos.cindirecto),
+                costos.porcentajeGanancia
+            );
+            System.out.println("Margen de Ganancia: " + margen);
+        }
+
+        private void mostrarPrecioVenta() {
+            float total = JavaCostos.calcularCostoTotal(costos.cfijo, costos.cvariable, costos.cindirecto);
+            float margen = JavaCostos.calcularMargenGanancia(total, costos.porcentajeGanancia);
+            System.out.println("\nPrecio de Venta: " + JavaCostos.calcularPrecioVenta(total, margen));
+        }
+
+        private void generarJSONCostos() {
+            if (costos.cfijo == 0 && costos.cvariable == 0 && costos.cindirecto == 0) {
+                System.out.println("\nError: Primero ingrese los costos (Opción 1)");
+                return;
+            }
+            
+            String json = JavaCostos.generarJSONCostos(
+                costos.cfijo,
+                costos.cvariable,
+                costos.cindirecto,
+                costos.unidades,
+                costos.porcentajeGanancia
+            );
+            System.out.println("\nJSON Generado:\n" + json);
+        }
+    }
+
+    public static void main(String[] args) {
+        new MenuCostos().iniciar();
+    }
+} 
